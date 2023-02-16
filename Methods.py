@@ -64,10 +64,6 @@ print(string)
 # making the function into the string so that I can use it to get the derivative later
 function = string
 # display polynomial for -1,0,1
-a, b, c = values
-a = float(a)
-b = float(b)
-c = float(c)
 for i in range(-1, 2):
     result = 0
     for j in range(0, 3):
@@ -75,12 +71,15 @@ for i in range(-1, 2):
     string = f"f({i}) = " + str(result)
     print(string)
 
+# initialising empty list of derivatives so that collection of derviates for root function is easier
+my_derivatives = []
 # getting the derivative of the function
 def poly_dev(poly, dev):
     c = 0
     string = ""
     for i in range(1, 3):
         poly[i - 1] = (len(poly) - (i + c)) * poly[i - 1]
+        my_derivatives.append(poly[i - 1])
         cur_string = str(round(poly[i - 1], 9))
         if i == 1:
             string += cur_string
@@ -95,3 +94,26 @@ def poly_dev(poly, dev):
 print("Derivative:")
 derivative = poly_dev(values, 1)
 print("f'(x) =" + str(derivative))
+
+# method for finding the root
+def finding_root(x, n):
+    def function(x):
+        result = 0
+        for j in range(0, 3):
+            result = result * x + values[j]
+        return result
+
+    def derivative_function(x):
+        result = 0
+        for j in range(0, 2):
+            result = result * x + my_derivatives[j]
+        return result
+
+    for intercept in range(1, n):
+        i = x - (function(x) / derivative_function(x))
+        x = i
+    print(f"The root was found to be {x}")
+    # not working as intended fixes needed
+
+
+finding_root(x=1, n=len(values))
